@@ -23,5 +23,13 @@
   "devDependencies": {
     "chai": "^2.1.0",
     "sinon": "^1.12.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elbuo8/sqs.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elbuo8/sqs.js/issues"
+  },
+  "homepage": "https://github.com/elbuo8/sqs.js"
 }
