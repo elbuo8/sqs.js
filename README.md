@@ -56,7 +56,7 @@ Emits the following events:
 * `message` (msg) received message
 * `error` (err) error received by polling AWS
 
-### msg.ack([fn])
+### `msg.ack([fn])`
 
 Messages default properties are described [here](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SQS.html#receiveMessage-property).
 
