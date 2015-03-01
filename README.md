@@ -65,10 +65,7 @@ Messages which shouldn't be delivered anymore should be removed from SQS. Invoke
 
 ## TODO
 
-- [ ] Close reader (clear interval)
 - [ ] Writer interface
-- [ ] JSON flag for automatic parsing attempt
-- [ ] Higher test coverage
 
 ## License
 
