@@ -35,33 +35,121 @@ describe('sqs.js', function() {
     });
   });
 
-  describe('#poll', function() {
+  describe('#buildMessage', function() {
+    var reader, config, msg;
+    beforeEach(function() {
+      config = {
+        debug: true,
+        parseJSON: true,
+        queueUrl: 'link',
+        sqs: {
+          deleteMessage: function(opts, cb) {
+            return cb();
+          }
+        }
+      };
+      reader = new sqsjs.reader(config);
+    });
+    it('should parse JSON if flag is set', function() {
+      msg = {
+        Body: '{}'
+      };
+      var transformedMsg = reader.buildMessage(msg);
+      expect(msg).to.exist;
+      expect(msg.Body).to.be.an('object');
+    });
+    it('should fail silently if JSON is not valid', function() {
+      msg = {
+        Body: {}
+      };
+      var transformedMsg = reader.buildMessage(msg);
+      expect(msg).to.exist;
+      expect(msg.Body).to.be.an('object');
+    });
+    it('should create a copy of Body into body', function() {
+      msg = {
+        Body: '{}'
+      };
+      var transformedMsg = reader.buildMessage(msg);
+      expect(msg).to.exist;
+      expect(msg.body).to.exist;
+      expect(msg.body).to.equal(msg.Body);
+    });
+    it('should add a method called ack', function() {
+      msg = {
+        Body: '{}'
+      };
+      var transformedMsg = reader.buildMessage(msg);
+      expect(msg).to.exist;
+      expect(msg.ack).to.exist;
+      typeof msg.ack;
+      expect(msg.ack).to.be.a('function');
+    });
+  });
+
+  describe('#receiveMessages', function() {
     var config, reader;
     beforeEach(function() {
       config = {
-        region: 'region',
-        accessKeyId: 'id',
-        secretAccessKey: 'secret',
-        queueUrl: 'localhost'
+        sqs: {},
+        debug: true,
+        queueUrl: 'link'
       };
       reader = new sqsjs.reader(config);
     });
 
-    afterEach(function() {
-      clearInterval(reader.interval);
-    });
-
     it('should emit error if sqs receiveMessage sends error', function(done) {
-      var stub = sinon.stub(reader.sqs, 'receiveMessage', function(opts, cb) {
+      reader.sqs.receiveMessage = function(opts, cb) {
         return cb(true);
-      });
+      };
       reader.on('error', function(err) {
         expect(err).to.exist;
-        expect(stub.calledOnce).to.be.true;
         done();
       });
+      reader.receiveMessages();
     });
 
-    it('should emit messages found');
+    it('should emit messages found', function(done) {
+      reader.sqs.receiveMessage = function(opts, cb) {
+        return cb(null, {Messages: [{Body: 1}, {Body: 2}, {Body: 3}]});
+      };
+      var spy = sinon.spy();
+      reader.on('message', spy);
+      reader.receiveMessages();
+      setTimeout(function() {
+        expect(spy.calledThrice).to.be.true;
+        done();
+      }, 1500);
+    });
+  });
+
+  describe('Message', function() {
+    describe('#ack', function() {
+      var reader, config, msg;
+      beforeEach(function() {
+        config = {
+          debug: true,
+          parseJSON: true,
+          queueUrl: 'link',
+          sqs: {}
+        };
+        reader = new sqsjs.reader(config);
+      });
+      it('should call sqs.deleteMessage with the proper params', function() {
+        msg = {
+          Body: '1',
+          ReceiptHandle: 'test'
+        };
+        reader.sqs.deleteMessage = function(opts, cb) {
+          expect(opts.QueueUrl).to.equal(reader.queueUrl);
+          expect(opts.ReceiptHandle).to.equal(msg.ReceiptHandle);
+          return cb();
+        };
+        var spy = sinon.spy();
+        msg = reader.buildMessage(msg);
+        msg.ack(spy);
+        expect(spy.calledOnce);
+      });
+    });
   });
 });
