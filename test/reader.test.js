@@ -6,9 +6,8 @@ var sqsjs = require('../index.js');
 
 describe('sqs.js', function() {
   describe('#constructor', function() {
-    var config = {};
+    var config = {debug: true};
     var reader;
-
     it('should throw if region is not provided', function() {
       expect(function () {new sqsjs.reader(config);}).to.throw(/region required/);
     });
@@ -26,6 +25,11 @@ describe('sqs.js', function() {
     });
     it('should not return null', function() {
       config.queueUrl = 'link';
+      reader = new sqsjs.reader(config);
+      expect(reader).to.exist;
+    });
+    it('should accept an sqs object as alternative to AWS info', function () {
+      config = {sqs: {}, debug: true, queueUrl: 'link'};
       reader = new sqsjs.reader(config);
       expect(reader).to.exist;
     });
