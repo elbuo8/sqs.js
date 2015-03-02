@@ -95,6 +95,7 @@ Optional parameter:
 
 - [ ] Make publish interface simpler (less AWSish)
 - [ ] Allow multiple messages to be published
+- [ ] Return callbacks and Promises
 
 ## License
 
