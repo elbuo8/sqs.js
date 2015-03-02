@@ -1,4 +1,5 @@
 # sqs.js
+[![Build Status](https://travis-ci.org/elbuo8/sqs.js.svg)](https://travis-ci.org/elbuo8/sqs.js)
 
 Yet Another SQS Client for Nodejs.
 
