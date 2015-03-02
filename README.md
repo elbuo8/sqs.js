@@ -91,6 +91,11 @@ Required fields in msg:
 Optional parameter:
 * `fn` will be called with `(err, data)`
 
+## TODO
+
+- [ ] Make publish interface simpler (less AWSish)
+- [ ] Allow multiple messages to be published
+
 ## License
 
 MIT
