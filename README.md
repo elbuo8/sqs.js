@@ -35,6 +35,15 @@ reader.on('message', function(msg) {
   msg.ack();
 });
 
+var writer = sqs.writer({
+  accessKeyId: 'somekey',
+  secretAccessKey: 'secretKey',
+  region: 'us-east-1',
+  queueUrl: 'someQueueUrl'
+});
+
+writer.publish({MessageBody: '{"id": 1}'});
+
 ```
 
 ## API
@@ -62,10 +71,24 @@ Messages default properties are described [here](http://docs.aws.amazon.com/AWSJ
 
 Messages which shouldn't be delivered anymore should be removed from SQS. Invoke #ack to delete the message. An optional callback can be provided which receives `(err, data)` as parameters.
 
+### `sqs.writer(config)`
 
-## TODO
+Required fields:
+* `accessKeyId` AWS AccessKeyId credential
+* `secretAccessKey` AWS secretAccessKey credential
+* `region` AWS region
+* `queueUrl` AWS SQS URL
 
-- [ ] Writer interface
+Emits the following events:
+* `error` (err) error received by submitting to AWS
+
+### `writer.publish(msg, [fn])`
+
+Required fields in msg:
+* `MessageBody` (String)
+
+Optional parameter:
+* `fn` will be called with `(err, data)`
 
 ## License
 
