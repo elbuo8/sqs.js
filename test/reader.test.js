@@ -4,7 +4,7 @@ var sinon = require('sinon');
 var expect = require('chai').expect;
 var sqsjs = require('../index.js');
 
-describe('sqs.js', function() {
+describe('reader', function() {
   describe('#constructor', function() {
     var config = {debug: true};
     var reader;
