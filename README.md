@@ -24,7 +24,8 @@ var reader = sqs.reader({
   accessKeyId: 'somekey',
   secretAccessKey: 'secretKey',
   region: 'us-east-1',
-  queueUrl: 'someQueueUrl'
+  queueUrl: 'someQueueUrl',
+  startPolling: true
 });
 
 reader.on('error', function(err) {
@@ -61,10 +62,24 @@ Optional fields:
 * `version` apiVersion (latest)
 * `visibility` VisibilityTimeout
 * `pollInterval` How often SQS is polled (1000)
+* `pollingSize` How many messages should each request receive (10)
+* `startPolling` Automatically start polling
 
 Emits the following events:
 * `message` (msg) received message
 * `error` (err) error received by polling AWS
+
+### `reader.receiveMessage()`
+
+Fetches messages from the queue.
+
+### `reader.poll()`
+
+Calls `.receiveMessage()` continuously.
+
+### `reader.close()`
+
+Stops polling messages.
 
 ### `msg.ack([fn])`
 
