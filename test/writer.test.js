@@ -6,7 +6,7 @@ var sqsjs = require('../index.js');
 
 describe('writer', function() {
   describe('#constructor', function() {
-    var config = {debug: true};
+    var config = {};
     var writer;
     it('should throw if region is not provided', function() {
       expect(function () {new sqsjs.writer(config);}).to.throw(/region required/);
@@ -19,17 +19,14 @@ describe('writer', function() {
       config.accessKeyId = 'id';
       expect(function () {new sqsjs.writer(config);}).to.throw(/secretAccessKey required/);
     });
-    it('should throw if queueUrl is not provided', function() {
-      config.secretAccessKey = 'secret';
-      expect(function () {new sqsjs.writer(config);}).to.throw(/queueUrl required/);
-    });
     it('should not return null', function() {
+      config.secretAccessKey = 'secret';
       config.queueUrl = 'link';
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
     });
     it('should accept an sqs object as alternative to AWS info', function () {
-      config = {sqs: {}, debug: true, queueUrl: 'link'};
+      config = {sqs: {}, queueUrl: 'link'};
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
     });
