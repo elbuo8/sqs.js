@@ -1,6 +1,6 @@
 {
   "name": "sqs.js",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Yet Another SQS client for Nodejs",
   "main": "index.js",
   "directories": {
