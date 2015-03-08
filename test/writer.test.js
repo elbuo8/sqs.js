@@ -33,12 +33,77 @@ describe('writer', function() {
   });
 
   describe('#publish', function() {
-    var writer, config;
-    beforeEach(function() {
+    var writer, config, sendMessageSpy, errEmitSpy, callbackSpy;
+    before(function() {
       config = {
         sqs: {
           sendMessage: function(opts, cb) {
-            return (new Error('error'));
+            expect(opts).to.exist;
+            return cb(new Error());
+          }
+        },
+        queueUrl: 'link'
+      };
+      writer = new sqsjs.writer(config);
+      sendMessageSpy = sinon.spy(writer.sqs, 'sendMessage');
+      errEmitSpy = sinon.spy();
+      callbackSpy = sinon.spy();
+      writer.on('error', errEmitSpy);
+      writer.publish({}, callbackSpy);
+    });
+    it('should call sqs.sendMessage once', function() {
+      expect(sendMessageSpy.calledOnce).to.be.true;
+    });
+    it('should emit error if AWS failed', function() {
+      expect(errEmitSpy.calledOnce).to.be.true;
+    });
+    it('should return a callback with an error if AWS failed', function() {
+      expect(callbackSpy.calledOnce).to.be.true;
+    });
+  });
+  describe('#publishBatch', function() {
+    var writer, config, sendMessageBatchSpy, errEmitSpy, callbackSpy;
+    before(function() {
+      config = {
+        sqs: {
+          sendMessageBatch: function(payload, cb) {
+            payload.Entries.forEach(function(msg) {
+              expect(msg.Id).to.exist;
+            });
+            return cb(new Error());
+          }
+        }
+      };
+      writer = new sqsjs.writer(config);
+      sendMessageBatchSpy = sinon.spy(writer.sqs, 'sendMessageBatch');
+      errEmitSpy = sinon.spy();
+      callbackSpy = sinon.spy();
+      writer.on('error', errEmitSpy);
+      writer.publishBatch([{}, {}], callbackSpy);
+    });
+
+    it('should call sqs.sendMessageBatch once', function() {
+      expect(sendMessageBatchSpy.calledOnce).to.be.true;
+    });
+    it('should emit an error if AWS failed', function() {
+      expect(errEmitSpy.calledOnce).to.be.true;
+    });
+    it('should return a callback with an error if AWS failed', function() {
+      expect(callbackSpy.calledOnce).to.be.true;
+    });
+  });
+
+  describe('#on(\'enqueue\')', function() {
+    var writer, config;
+    before(function() {
+      config = {
+        sqs: {
+          sendMessageBatch: function(payload, cb) {
+            expect(payload.Entries.length).to.equal(10);
+            payload.Entries.forEach(function(msg) {
+              expect(msg.Id).to.exist;
+            });
+            return cb();
           }
         },
         queueUrl: 'link'
@@ -46,23 +111,12 @@ describe('writer', function() {
       writer = new sqsjs.writer(config);
     });
 
-    it('should call sqs.sendMessage once', function() {
-      var spy = sinon.spy(writer.sqs.sendMessage);
-      writer.publish({}, function(err) {
-        expect(err).to.exist;
-        expect(spy.calledOnce);
-      });
-    });
-    it('should emit an error if AWS failed', function() {
-      writer.on('error', function(err) {
-        expect(err).to.exist;
-      });
-      writer.publish({});
-    });
-    it('should return a callback with an error if AWS failed', function() {
-      writer.publish({}, function(err) {
-        expect(err).to.exist;
-      });
+    it('should call #publishBatch when 10 messages are in queue', function() {
+      var spy = sinon.spy(writer.sqs, 'sendMessageBatch');
+      for (var i = 0; i < 20; i++) {
+        writer.emit('enqueue', {Body: i});
+      }
+      expect(spy.calledTwice).to.be.true;
     });
   });
 });
