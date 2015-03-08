@@ -8,6 +8,7 @@ Yet Another SQS Client for Nodejs.
 * Message Acknowledgement
 * Event Interface
 * Configurable Polling Interval
+* Async Message Delivery
 
 ## Installation
 
@@ -106,10 +107,26 @@ Required fields in msg:
 Optional parameter:
 * `fn` will be called with `(err, data)`
 
+### `writer.publishBatch(msgs, [fn])`
+
+* `msgs` is an array of messages (can't bigger than 10)
+
+Required fields in msg:
+* `MessageBody` (String)
+
+Optional parameter:
+* `fn` will be called with `(err, data)`
+
+### `writer.emit('equeue', msg)`
+
+Async Delivery method. Every 10th emit, `publishBatch` will be invoked with the first 10 messages stored.
+
+Required fields in msg:
+* `MessageBody` (String)
+
 ## TODO
 
 - [ ] Make publish interface simpler (less AWSish)
-- [ ] Allow multiple messages to be published
 - [ ] Return callbacks and Promises
 
 ## License
