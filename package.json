@@ -1,6 +1,6 @@
 {
   "name": "sqs.js",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Yet Another SQS client for Nodejs",
   "main": "index.js",
   "directories": {
@@ -14,7 +14,9 @@
     "sqs",
     "aws",
     "simple",
-    "queue"
+    "queue",
+    "amazon",
+    "message"
   ],
   "author": "Yamil Asusta @elbuo8",
   "license": "MIT",

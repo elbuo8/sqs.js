@@ -117,7 +117,7 @@ Required fields in msg:
 Optional parameter:
 * `fn` will be called with `(err, data)`
 
-### `writer.emit('equeue', msg)`
+### `writer.emit('enqueue', msg)`
 
 Async Delivery method. Every 10th emit, `publishBatch` will be invoked with the first 10 messages stored.
 
