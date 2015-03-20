@@ -94,12 +94,11 @@ describe('writer', function() {
   });
 
   describe('#on(\'enqueue\')', function() {
-    var writer, config;
+    var writer, config, spy;
     before(function() {
       config = {
         sqs: {
           sendMessageBatch: function(payload, cb) {
-            expect(payload.Entries.length).to.equal(10);
             payload.Entries.forEach(function(msg) {
               expect(msg.Id).to.exist;
             });
@@ -109,14 +108,27 @@ describe('writer', function() {
         queueUrl: 'link'
       };
       writer = new sqsjs.writer(config);
+      spy = sinon.spy(writer.sqs, 'sendMessageBatch');
     });
-
+    afterEach(function() {
+      spy.reset();
+    });
     it('should call #publishBatch when 10 messages are in queue', function() {
-      var spy = sinon.spy(writer.sqs, 'sendMessageBatch');
       for (var i = 0; i < 20; i++) {
         writer.emit('enqueue', {Body: i});
       }
       expect(spy.calledTwice).to.be.true;
+    });
+
+    it('should call #publishBatch if items are in queue and interval is met', function(done) {
+      writer.flushInterval = 1000;
+      for (var i = 0; i < 11; i++) {
+        writer.emit('enqueue', {Body: i});
+      }
+      setTimeout(function() {
+        expect(spy.calledTwice).to.be.true;
+        done();
+      }, 1000);
     });
   });
 });
