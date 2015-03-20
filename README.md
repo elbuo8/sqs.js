@@ -91,10 +91,12 @@ Messages which shouldn't be delivered anymore should be removed from SQS. Invoke
 ### `sqs.writer(config)`
 
 Required fields:
-* `accessKeyId` AWS AccessKeyId credential
+* `accessKeyId` AWS accessKeyId credential
 * `secretAccessKey` AWS secretAccessKey credential
 * `region` AWS region
 * `queueUrl` AWS SQS URL
+* `flushSize` Internal queue size (defaults to 10)
+* `flushInterval` How often the internal queue is purged (defaults to 10s)
 
 Emits the following events:
 * `error` (err) error received by submitting to AWS
