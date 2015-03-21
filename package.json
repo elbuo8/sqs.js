@@ -21,7 +21,7 @@
   "author": "Yamil Asusta @elbuo8",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1.14"
+    "aws-sdk": "^2.1.18"
   },
   "devDependencies": {
     "chai": "^2.1.0",
