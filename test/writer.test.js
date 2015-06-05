@@ -72,7 +72,8 @@ describe('writer', function() {
             });
             return cb(new Error());
           }
-        }
+        },
+        queueUrl: 'url'
       };
       writer = new sqsjs.writer(config);
       sendMessageBatchSpy = sinon.spy(writer.sqs, 'sendMessageBatch');
