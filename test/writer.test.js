@@ -19,8 +19,11 @@ describe('writer', function() {
       config.accessKeyId = 'id';
       expect(function () {new sqsjs.writer(config);}).to.throw(/secretAccessKey required/);
     });
-    it('should not return null', function() {
+    it('should throw if queueUrl is not provided', function() {
       config.secretAccessKey = 'secret';
+      expect(function () {new sqsjs.reader(config);}).to.throw(/queueUrl required/);
+    });
+    it('should not return null', function() {
       config.queueUrl = 'link';
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
