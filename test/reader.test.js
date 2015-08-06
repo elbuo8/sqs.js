@@ -148,5 +148,32 @@ describe('reader', function() {
         expect(spy.calledOnce);
       });
     });
+    describe('#extendTimeout', function() {
+      var reader, config, msg;
+      beforeEach(function() {
+        config = {
+          queueUrl: 'link',
+          sqs: {}
+        };
+        reader = new sqsjs.reader(config);
+      });
+       it('should call sqs.changeMessageVisibility with the proper params', function() {
+        msg = {
+          Body: '1',
+          ReceiptHandle: 'test'
+        };
+        var amount = 5;
+        reader.sqs.changeMessageVisibility = function(opts, cb) {
+          expect(opts.QueueUrl).to.equal(reader.queueUrl);
+          expect(opts.ReceiptHandle).to.equal(msg.ReceiptHandle);
+          expect(opts.VisibilityTimeout).to.equal(amount);
+          return cb();
+        };
+        var spy = sinon.spy();
+        msg = reader.buildMessage(msg);
+        msg.extendTimeout(amount, spy);
+        expect(spy.calledOnce);
+      });
+    });
   });
 });
