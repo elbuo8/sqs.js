@@ -76,7 +76,7 @@ Fetches messages from the queue.
 
 ### `reader.poll()`
 
-Calls `.receiveMessage()` continuously.
+Calls `.receiveMessages()` continuously.
 
 ### `reader.close()`
 
