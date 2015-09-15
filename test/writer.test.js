@@ -95,6 +95,9 @@ describe('writer', function() {
     it('should return a callback with an error if AWS failed', function() {
       expect(callbackSpy.calledOnce).to.be.true;
     });
+    it('should store failed messages back in queue', function() {
+      expect(writer.batchMessages).to.have.length(2);
+    });
   });
 
   describe('#on(\'enqueue\')', function() {
