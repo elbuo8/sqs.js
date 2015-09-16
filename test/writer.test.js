@@ -39,6 +39,11 @@ describe('writer', function() {
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
     });
+    it('should disable retry', function() {
+      config = {sqs: {}, queueUrl: 'link', retry: false};
+      writer = new sqsjs.writer(config);
+      expect(writer.retry).to.be.false;
+    });
   });
 
   describe('#publish', function() {
