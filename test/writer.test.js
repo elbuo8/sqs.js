@@ -16,14 +16,20 @@ describe('writer', function() {
       expect(function () {new sqsjs.writer(config);}).to.throw(/accessKeyId required/);
     });
     it('should throw if secretAccessKey is not provided', function() {
+      config.region = 'region';
       config.accessKeyId = 'id';
       expect(function () {new sqsjs.writer(config);}).to.throw(/secretAccessKey required/);
     });
     it('should throw if queueUrl is not provided', function() {
+      config.region = 'region';
+      config.accessKeyId = 'id';
       config.secretAccessKey = 'secret';
       expect(function () {new sqsjs.reader(config);}).to.throw(/queueUrl required/);
     });
     it('should not return null', function() {
+      config.region = 'region';
+      config.accessKeyId = 'id';
+      config.secretAccessKey = 'secret';
       config.queueUrl = 'link';
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
