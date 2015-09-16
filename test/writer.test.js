@@ -16,14 +16,20 @@ describe('writer', function() {
       expect(function () {new sqsjs.writer(config);}).to.throw(/accessKeyId required/);
     });
     it('should throw if secretAccessKey is not provided', function() {
+      config.region = 'region';
       config.accessKeyId = 'id';
       expect(function () {new sqsjs.writer(config);}).to.throw(/secretAccessKey required/);
     });
     it('should throw if queueUrl is not provided', function() {
+      config.region = 'region';
+      config.accessKeyId = 'id';
       config.secretAccessKey = 'secret';
       expect(function () {new sqsjs.reader(config);}).to.throw(/queueUrl required/);
     });
     it('should not return null', function() {
+      config.region = 'region';
+      config.accessKeyId = 'id';
+      config.secretAccessKey = 'secret';
       config.queueUrl = 'link';
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
@@ -32,6 +38,11 @@ describe('writer', function() {
       config = {sqs: {}, queueUrl: 'link'};
       writer = new sqsjs.writer(config);
       expect(writer).to.exist;
+    });
+    it('should disable retry', function() {
+      config = {sqs: {}, queueUrl: 'link', retry: false};
+      writer = new sqsjs.writer(config);
+      expect(writer.retry).to.be.false;
     });
   });
 
@@ -94,6 +105,9 @@ describe('writer', function() {
     });
     it('should return a callback with an error if AWS failed', function() {
       expect(callbackSpy.calledOnce).to.be.true;
+    });
+    it('should store failed messages back in queue', function() {
+      expect(writer.batchMessages).to.have.length(2);
     });
   });
 
