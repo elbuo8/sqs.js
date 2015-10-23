@@ -21,12 +21,12 @@
   "author": "Yamil Asusta @elbuo8",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1.44"
+    "aws-sdk": "^2.2.11"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
-    "mocha": "^2.1.0",
-    "sinon": "^1.12.2"
+    "chai": "^3.4.0",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.2"
   },
   "repository": {
     "type": "git",
