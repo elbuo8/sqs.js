@@ -154,18 +154,6 @@ describe('reader', function() {
       expect(spy.calledOnce).to.be.true;
       done();
     });
-
-    it('should not allow incorrectly configured long polling', function(done) {
-      var createReader = function(){
-        new sqsjs.reader({
-          sqs: {},
-          queueUrl: 'link',
-          waitTimeSeconds: 300
-      })};
-
-      expect(createReader).to.throw();
-      done();
-    })
   });
 
   describe('Message', function() {
