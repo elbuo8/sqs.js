@@ -8,6 +8,7 @@ Yet Another SQS Client for Nodejs.
 * Message Acknowledgement
 * Event Interface
 * Configurable Polling Interval
+* Long Polling
 * Async Message Delivery
 
 ## Installation
@@ -65,6 +66,7 @@ Optional fields:
 * `pollInterval` How often SQS is polled (1000)
 * `pollingSize` How many messages should each request receive (10)
 * `startPolling` Automatically start polling
+* `waitTimeSeconds` How long to wait during long polling
 
 Emits the following events:
 * `message` (msg) received message
