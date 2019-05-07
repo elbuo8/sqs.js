@@ -136,6 +136,24 @@ describe('reader', function() {
         done();
       }, 1500);
     });
+
+    it('should allow configuration of long polling', function(done) {
+      var longPollReader = new sqsjs.reader({
+        sqs: {},
+        queueUrl: 'link',
+        waitTimeSeconds: 20
+      });
+
+      longPollReader.sqs.receiveMessage = function(opts, cb) {
+        return cb(null, {Messages: [{Body: 1}]});
+      };
+
+      var spy = sinon.spy();
+      longPollReader.on('message', spy);
+      longPollReader.receiveMessages();
+      expect(spy.calledOnce).to.be.true;
+      done();
+    });
   });
 
   describe('Message', function() {
